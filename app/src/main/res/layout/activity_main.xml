@@ -38,6 +38,7 @@
             >
 
             <Button
+                android:id="@+id/btnIamDriver"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
@@ -48,6 +49,7 @@
                 android:layout_marginRight="5dp"/>
 
             <Button
+                android:id="@+id/btnIamClient"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:background="@color/purple_700"
