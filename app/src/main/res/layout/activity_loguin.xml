@@ -93,7 +93,7 @@
                 android:layout_height="wrap_content"
                 android:text="INGRESAR"
                 android:background="@color/purple_700"
-                android:backgroundTint="@color/purple_200"
+                android:backgroundTint="@color/purple_700"
                 android:layout_margin="30dp"
                 android:textColor="@color/white" />
 

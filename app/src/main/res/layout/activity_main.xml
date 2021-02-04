@@ -45,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/purple_700"
                 android:text="SOY CONDUCTOR"
-                android:backgroundTint="@color/purple_200"
+                android:backgroundTint="@color/purple_700"
                 android:textColor="@color/white"
                 android:layout_marginRight="5dp"/>
 
@@ -54,8 +54,9 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:background="@color/purple_700"
-                android:backgroundTint="@color/purple_200"
+                android:backgroundTint="@color/purple_700"
                 android:layout_height="wrap_content"
+                android:textColor="@color/white"
                 android:layout_marginLeft="5dp"
                 android:text="SOY CLIENTE" />
 

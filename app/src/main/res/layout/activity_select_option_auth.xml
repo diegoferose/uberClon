@@ -39,18 +39,19 @@
             android:layout_marginLeft="30dp"
             android:background="@color/purple_700"
             android:text="YA TENGO CUENTA"
-            android:backgroundTint="@color/purple_200"
+            android:backgroundTint="@color/purple_700"
             android:textColor="@color/white"
             android:layout_marginRight="30dp"/>
 
         <Button
             android:layout_width="match_parent"
             android:background="@color/purple_700"
-            android:backgroundTint="@color/purple_200"
+            android:backgroundTint="@color/purple_700"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:layout_marginTop="10dp"
+            android:textColor="@color/white"
             android:text="REGISTARME AHORA" />
 
 
