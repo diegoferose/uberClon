@@ -13,7 +13,9 @@
         android:theme="@style/Theme.UberClone">
         <activity android:name=".loguinActivity"></activity>
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".SelectOptionAuthActivity" />
+        <activity android:name=".SelectOptionAuthActivity"
+            android:parentActivityName=".MainActivity"
+        />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
