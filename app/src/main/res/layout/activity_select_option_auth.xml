@@ -34,6 +34,7 @@
             android:textStyle="bold"/>
 
         <Button
+            android:id="@+id/btnToGoLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
@@ -44,6 +45,7 @@
             android:layout_marginRight="30dp"/>
 
         <Button
+            android:id="@+id/btnToGoRegister"
             android:layout_width="match_parent"
             android:background="@color/purple_700"
             android:backgroundTint="@color/purple_700"
