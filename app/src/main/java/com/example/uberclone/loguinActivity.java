@@ -63,6 +63,12 @@ public class loguinActivity extends AppCompatActivity {
                  });
 
              }
+             else {
+                 Toast.makeText(loguinActivity.this,"La contraseña debe tener al menos 6 caracteres", Toast.LENGTH_SHORT).show();
+             }
+         }
+         else {
+             Toast.makeText(loguinActivity.this,"El email y contraseña son obligatorios", Toast.LENGTH_SHORT).show();
          }
 
     }
