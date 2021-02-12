@@ -7,6 +7,9 @@
     android:fitsSystemWindows="true"
     tools:context=".loguinActivity">
 
+    //Action bar tollbar
+    <include layout="@layout/action_bar_toollbar"></include>
+
 
     <LinearLayout
         android:layout_width="match_parent"

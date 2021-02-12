@@ -11,7 +11,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.UberClone">
-        <activity android:name=".loguinActivity"></activity>
+        <activity android:name=".loguinActivity"
+            android:parentActivityName=".SelectOptionAuthActivity"
+            />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".SelectOptionAuthActivity"
             android:parentActivityName=".MainActivity"

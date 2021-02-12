@@ -12,6 +12,7 @@ public class SelectOptionAuthActivity extends AppCompatActivity {
 
     Toolbar mToolbar;
     Button mButtonGoToLogin;
+    Button mButtonGoToRegister;
 
 
     @Override
@@ -24,6 +25,8 @@ public class SelectOptionAuthActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mButtonGoToLogin = findViewById(R.id.btnToGoLogin);
+        //Instanciamos el boton de registro
+        mButtonGoToRegister = findViewById(R.id.btnToGoRegister);
         mButtonGoToLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -31,10 +34,22 @@ public class SelectOptionAuthActivity extends AppCompatActivity {
             }
         });
 
+        mButtonGoToRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToRegister();
+            }
+        });
+
     }
 
     public void goToLogin (){
         Intent intent = new Intent(SelectOptionAuthActivity.this, loguinActivity.class);
+        startActivity(intent);
+    }
+
+    public void goToRegister (){
+        Intent intent = new Intent(SelectOptionAuthActivity.this, RegisterActivity.class);
         startActivity(intent);
     }
 }
