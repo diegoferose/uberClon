@@ -14,7 +14,8 @@
         <activity android:name=".loguinActivity"
             android:parentActivityName=".SelectOptionAuthActivity"
             />
-        <activity android:name=".RegisterActivity" />
+        <activity android:name=".RegisterActivity"
+            android:parentActivityName=".SelectOptionAuthActivity"/>
         <activity android:name=".SelectOptionAuthActivity"
             android:parentActivityName=".MainActivity"
         />
