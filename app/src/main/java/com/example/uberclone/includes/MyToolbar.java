@@ -7,7 +7,10 @@ import com.example.uberclone.R;
 
 
 public class MyToolbar {
-
+    /*--------------------------------------------------------------------------------------------*/
+    /*CLASE: MyToolbar----------------------------------------------------------------------------*/
+    /*FUNCION: Contiene los metodos necesarios para mostrar el toolbar ---------------------------*/
+    /*--------------------------------------------------------------------------------------------*/
     public static void show(AppCompatActivity activity, String title, boolean upButton) {
         Toolbar toolbar = activity.findViewById(R.id.toolbar);
         activity.setSupportActionBar(toolbar);

@@ -1,13 +1,17 @@
-package com.example.uberclone;
+package com.example.uberclone.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.uberclone.R;
+import com.example.uberclone.activities.client.RegisterActivity;
+import com.example.uberclone.activities.driver.RegisterDriverActivity;
 import com.example.uberclone.includes.MyToolbar;
 
 public class SelectOptionAuthActivity extends AppCompatActivity {
@@ -20,6 +24,7 @@ public class SelectOptionAuthActivity extends AppCompatActivity {
     Toolbar mToolbar;
     Button mButtonGoToLogin;
     Button mButtonGoToRegister;
+    SharedPreferences mPref;
     /*----------------------------------------*/
 
     @Override
@@ -28,7 +33,7 @@ public class SelectOptionAuthActivity extends AppCompatActivity {
         setContentView(R.layout.activity_select_option_auth);
         //se implemente toolbar en esta vista
         MyToolbar.show(this, "Seleccione una opcion", true);
-
+        mPref = getApplicationContext().getSharedPreferences("typeUser" , MODE_PRIVATE);
         //se instancian los botones
         mButtonGoToLogin = findViewById(R.id.btnToGoLogin);
         mButtonGoToRegister = findViewById(R.id.btnToGoRegister);
@@ -64,7 +69,14 @@ public class SelectOptionAuthActivity extends AppCompatActivity {
     /*FUNCION: se encarga de redirigir al RegisterActivity-----------------------------------*/
     /*---------------------------------------------------------------------------------------*/
     public void goToRegister (){
-        Intent intent = new Intent(SelectOptionAuthActivity.this, RegisterActivity.class);
-        startActivity(intent);
+        String typeUser = mPref.getString("user","");
+        if (typeUser.equals("client")){
+            Intent intent = new Intent(SelectOptionAuthActivity.this, RegisterActivity.class);
+            startActivity(intent);
+        }else{
+            Intent intent = new Intent(SelectOptionAuthActivity.this, RegisterDriverActivity.class);
+            startActivity(intent);
+        }
+
     }
 }
