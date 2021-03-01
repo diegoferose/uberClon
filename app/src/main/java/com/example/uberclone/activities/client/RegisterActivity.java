@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +13,8 @@ import android.widget.Toast;
 
 import com.example.uberclone.Models.Client;
 import com.example.uberclone.R;
+import com.example.uberclone.activities.driver.MapDriverActivity;
+import com.example.uberclone.activities.driver.RegisterDriverActivity;
 import com.example.uberclone.includes.MyToolbar;
 import com.example.uberclone.providers.AuthProvider;
 import com.example.uberclone.providers.ClientProvider;
@@ -124,6 +127,9 @@ public class RegisterActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     //el guardado en firebase se realizo con exito
                     Toast.makeText(RegisterActivity.this, "Registro exitoso", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(RegisterActivity.this, MapClientActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
                 }
                 else {
                     //el registro en firebase no se realizo con exito

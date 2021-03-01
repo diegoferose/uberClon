@@ -9,6 +9,9 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.uberclone.R;
+import com.example.uberclone.activities.client.MapClientActivity;
+import com.example.uberclone.activities.driver.MapDriverActivity;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
     Button mButtonDriver;
@@ -50,6 +53,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            String typeUser = mPref.getString("user","");
+            if (typeUser.equals("client")){
+                Intent intent = new Intent(MainActivity.this, MapClientActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }else{
+                Intent intent = new Intent(MainActivity.this, MapDriverActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+        }
+    }
+
     private void goToSelectAuth() {
         Intent intent = new Intent(MainActivity.this,SelectOptionAuthActivity.class);
         startActivity(intent);
