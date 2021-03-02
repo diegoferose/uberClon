@@ -9,11 +9,19 @@
     android:background="@color/white"
     tools:context=".activities.MainActivity">
 
+    /*--------------------------------------------------------------------------------------------*/
+    /*ACTIVITY_MAIN.XML---------------------------------------------------------------------------*/
+    /*FUNCION: Crea la vista de la pagina principal de la APP-------------------------------------*/
+    /*--------------------------------------------------------------------------------------------*/
+
+
+    //Se crea el contenedor de la vista
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical" >
 
+        //Se Ingresa el logo de la empresa
         <ImageView
             android:layout_width="150dp"
             android:layout_height="150dp"
@@ -21,6 +29,7 @@
             android:layout_marginTop="50dp"
             android:layout_gravity="center"/>
 
+        //Se crea el texto descriptivo principal
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -30,6 +39,7 @@
             android:textSize="20sp"
             android:textStyle="bold"/>
 
+        // Se crea el contenedor del boton
             <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -38,6 +48,7 @@
             android:layout_margin="20dp"
             >
 
+            // Se crea el boton soy conductor
             <Button
                 android:id="@+id/btnIamDriver"
                 android:layout_width="0dp"
@@ -48,7 +59,7 @@
                 android:backgroundTint="@color/purple_700"
                 android:textColor="@color/white"
                 android:layout_marginRight="5dp"/>
-
+            // Se crea el boton soy cliente
             <Button
                 android:id="@+id/btnIamClient"
                 android:layout_width="0dp"

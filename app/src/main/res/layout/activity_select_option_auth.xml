@@ -8,15 +8,23 @@
     android:background="@color/white"
     tools:context=".activities.SelectOptionAuthActivity">
 
+    /*--------------------------------------------------------------------------------------------*/
+    /*activity_select_option_auth.xml---------------------------------------------------------------------------*/
+    /*FUNCION: Crea la vista donde se selecciona el tipo de usuario de la APP-------------------------------------*/
+    /*--------------------------------------------------------------------------------------------*/
+
+    //Se incluye la barra de toolbar
     <include layout="@layout/action_bar_toollbar"></include>
 
 
+    // se crea el contenedor
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center">
 
+        // se le agrega el logo de la empresa
         <ImageView
         android:layout_width="150dp"
         android:layout_height="150dp"
@@ -24,6 +32,7 @@
         android:layout_marginTop="50dp"
         android:layout_gravity="center"/>
 
+        // texto descriptivo de la vista
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -33,6 +42,7 @@
             android:textSize="20sp"
             android:textStyle="bold"/>
 
+        // se crea el boton ya tengo cuenta
         <Button
             android:id="@+id/btnToGoLogin"
             android:layout_width="match_parent"
@@ -44,6 +54,7 @@
             android:textColor="@color/white"
             android:layout_marginRight="30dp"/>
 
+        // se crea el boton registrarme ahora
         <Button
             android:id="@+id/btnToGoRegister"
             android:layout_width="match_parent"
