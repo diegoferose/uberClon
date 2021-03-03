@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="@color/white"
+    tools:context=".activities.SelectOptionAuthActivity">
+
+    /*--------------------------------------------------------------------------------------------*/
+    /*activity_select_option_auth.xml---------------------------------------------------------------------------*/
+    /*FUNCION: Crea la vista donde se selecciona el tipo de usuario de la APP-------------------------------------*/
+    /*--------------------------------------------------------------------------------------------*/
+
+    //Se incluye la barra de toolbar
+    <include layout="@layout/action_bar_toollbar"></include>
+
+
+    // se crea el contenedor
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        // se le agrega el logo de la empresa
+        <ImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/vanes"
+        android:layout_marginTop="50dp"
+        android:layout_gravity="center"/>
+
+        // texto descriptivo de la vista
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Selecciona una opción"
+            android:textAlignment="center"
+            android:layout_margin="40dp"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+        // se crea el boton ya tengo cuenta
+        <Button
+            android:id="@+id/btnToGoLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:background="@color/purple_700"
+            android:text="YA TENGO CUENTA"
+            android:backgroundTint="@color/purple_700"
+            android:textColor="@color/white"
+            android:layout_marginRight="30dp"/>
+
+        // se crea el boton registrarme ahora
+        <Button
+            android:id="@+id/btnToGoRegister"
+            android:layout_width="match_parent"
+            android:background="@color/purple_700"
+            android:backgroundTint="@color/purple_700"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/white"
+            android:text="REGISTARME AHORA" />
+
+
+
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
