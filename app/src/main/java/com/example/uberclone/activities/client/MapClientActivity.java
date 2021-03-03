@@ -18,6 +18,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -29,6 +30,7 @@ import com.example.uberclone.providers.GeofireProvider;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
 import com.firebase.geofire.GeoQueryEventListener;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -43,9 +45,16 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.firebase.database.DatabaseError;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MapClientActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -64,6 +73,14 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
     private LatLng mCurrentLatLng;
     private List<Marker> mDriversMarkers = new ArrayList<>();
     private boolean mIsFirstTime = true;
+
+    //Variables para el Place autocomplete
+    private PlacesClient mPlaces;
+    private AutocompleteSupportFragment mAutocomplete;
+
+    //Varibales que guarda el origen y el destino del cliente
+    private String mOrigin;
+    private LatLng mOriginLatLng;
 
 
     LocationCallback mLocationCallback = new LocationCallback() {
@@ -112,6 +129,31 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
 
         mMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mMapFragment.getMapAsync(this);
+
+        //Instanciamos varables Place Autocomplete
+        if (!Places.isInitialized()){
+            Places.initialize(getApplicationContext(), getResources().getString(R.string.google_maps_key));
+        }
+
+        mPlaces = Places.createClient(this);
+        mAutocomplete = (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.placeAutocompleteOrigin);
+        mAutocomplete.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.LAT_LNG, Place.Field.NAME));
+        mAutocomplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(@NonNull Place place) {
+                mOrigin = place.getName();
+                mOriginLatLng = place.getLatLng();
+                Log.d("PLACE", "Name: " + mOrigin);
+                Log.d("PLACE", "Lat: " + mOriginLatLng.latitude);
+                Log.d("PLACE", "Lng: " + mOriginLatLng.longitude);
+
+            }
+
+            @Override
+            public void onError(@NonNull Status status) {
+
+            }
+        });
     }
 
     private void getActiveDrivers(){
