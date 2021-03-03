@@ -25,6 +25,10 @@ import com.example.uberclone.R;
 import com.example.uberclone.activities.MainActivity;
 import com.example.uberclone.includes.MyToolbar;
 import com.example.uberclone.providers.AuthProvider;
+import com.example.uberclone.providers.GeofireProvider;
+import com.firebase.geofire.GeoLocation;
+import com.firebase.geofire.GeoQuery;
+import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -34,8 +38,15 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DatabaseError;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MapClientActivity extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
@@ -47,12 +58,30 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
 
     private final static int LOCATION_REQUEST_CODE = 1;
     private final static int SETTINGS_REQUEST_CODE = 2;
+    private Marker mMarker;
+
+    private GeofireProvider mGeoFireProvider;
+    private LatLng mCurrentLatLng;
+    private List<Marker> mDriversMarkers = new ArrayList<>();
+    private boolean mIsFirstTime = true;
+
 
     LocationCallback mLocationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(LocationResult locationResult) {
             for (Location location : locationResult.getLocations()) {
                 if (getApplicationContext() != null) {
+                    if (mMarker != null) {
+                    mMarker.remove();
+                }
+                    mCurrentLatLng = new LatLng(location.getLatitude(),location.getLongitude());
+
+                    mMarker = mMap.addMarker(new MarkerOptions().position(
+                            new LatLng(location.getLatitude(), location.getLongitude())
+                            )
+                                    .title("Tu posicion")
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_my_location))
+                    );
                     // OBTENER LA LOCALIZACION DEL USUARIO EN TIEMPO REAL
                     mMap.moveCamera(CameraUpdateFactory.newCameraPosition(
                             new CameraPosition.Builder()
@@ -60,6 +89,11 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
                                     .zoom(15f)
                                     .build()
                     ));
+
+                    if (mIsFirstTime) {
+                        mIsFirstTime = false;
+                        getActiveDrivers();
+                    }
                 }
             }
         }
@@ -72,11 +106,71 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
         MyToolbar.show(this, "Cliente", false);
 
         mAuthProvider = new AuthProvider();
+        mGeoFireProvider = new GeofireProvider();
 
         mFusedLocation = LocationServices.getFusedLocationProviderClient(this);
 
         mMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mMapFragment.getMapAsync(this);
+    }
+
+    private void getActiveDrivers(){
+        mGeoFireProvider.getActiveDrivers(mCurrentLatLng).addGeoQueryEventListener(new GeoQueryEventListener() {
+            @Override
+            public void onKeyEntered(String key, GeoLocation location) {
+                //AÑADIREMOS LOS MARCADORES DE LOS CONDUCTORES QUE SE CONECTEN EN LA APLICACION
+
+                for (Marker marker: mDriversMarkers){
+                    if (marker.getTag() != null){
+                        if (marker.getTag().equals(key)){
+                            return;
+                        }
+                    }
+                }
+                LatLng driverLatLng = new LatLng(location.latitude,location.longitude);
+                Marker marker = mMap.addMarker(new MarkerOptions().position(driverLatLng).title("Conductor Disponible").icon(BitmapDescriptorFactory.fromResource(R.drawable.carro_mapa)));
+                marker.setTag(key);
+                mDriversMarkers.add(marker);
+            }
+
+            @Override
+            public void onKeyExited(String key) {
+                for (Marker marker: mDriversMarkers){
+                    if (marker.getTag() != null){
+                        if (marker.getTag().equals(key)){
+                            marker.remove();
+                            mDriversMarkers.remove(marker);
+                            return;
+                        }
+                    }
+                }
+
+            }
+
+            @Override
+            public void onKeyMoved(String key, GeoLocation location) {
+                //ACTUALIZAR POSICION DE CADA CONDUCTOR
+                for (Marker marker: mDriversMarkers){
+                    if (marker.getTag() != null){
+                        if (marker.getTag().equals(key)){
+                            marker.setPosition(new LatLng(location.latitude,location.longitude));
+                        }
+                    }
+                }
+
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+
+            }
+
+            @Override
+            public void onGeoQueryError(DatabaseError error) {
+
+            }
+        });
+
     }
 
     @Override
