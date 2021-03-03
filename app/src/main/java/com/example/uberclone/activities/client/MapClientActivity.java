@@ -89,9 +89,9 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
             for (Location location : locationResult.getLocations()) {
                 if (getApplicationContext() != null) {
                     if (mMarker != null) {
-                    mMarker.remove();
-                }
-                    mCurrentLatLng = new LatLng(location.getLatitude(),location.getLongitude());
+                        mMarker.remove();
+                    }
+                    mCurrentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
 
                     mMarker = mMap.addMarker(new MarkerOptions().position(
                             new LatLng(location.getLatitude(), location.getLongitude())
@@ -131,7 +131,7 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
         mMapFragment.getMapAsync(this);
 
         //Instanciamos varables Place Autocomplete
-        if (!Places.isInitialized()){
+        if (!Places.isInitialized()) {
             Places.initialize(getApplicationContext(), getResources().getString(R.string.google_maps_key));
         }
 
@@ -156,20 +156,20 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
         });
     }
 
-    private void getActiveDrivers(){
+    private void getActiveDrivers() {
         mGeoFireProvider.getActiveDrivers(mCurrentLatLng).addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
                 //AÑADIREMOS LOS MARCADORES DE LOS CONDUCTORES QUE SE CONECTEN EN LA APLICACION
 
-                for (Marker marker: mDriversMarkers){
-                    if (marker.getTag() != null){
-                        if (marker.getTag().equals(key)){
+                for (Marker marker : mDriversMarkers) {
+                    if (marker.getTag() != null) {
+                        if (marker.getTag().equals(key)) {
                             return;
                         }
                     }
                 }
-                LatLng driverLatLng = new LatLng(location.latitude,location.longitude);
+                LatLng driverLatLng = new LatLng(location.latitude, location.longitude);
                 Marker marker = mMap.addMarker(new MarkerOptions().position(driverLatLng).title("Conductor Disponible").icon(BitmapDescriptorFactory.fromResource(R.drawable.carro_mapa)));
                 marker.setTag(key);
                 mDriversMarkers.add(marker);
@@ -177,9 +177,9 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
 
             @Override
             public void onKeyExited(String key) {
-                for (Marker marker: mDriversMarkers){
-                    if (marker.getTag() != null){
-                        if (marker.getTag().equals(key)){
+                for (Marker marker : mDriversMarkers) {
+                    if (marker.getTag() != null) {
+                        if (marker.getTag().equals(key)) {
                             marker.remove();
                             mDriversMarkers.remove(marker);
                             return;
@@ -192,10 +192,10 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
             @Override
             public void onKeyMoved(String key, GeoLocation location) {
                 //ACTUALIZAR POSICION DE CADA CONDUCTOR
-                for (Marker marker: mDriversMarkers){
-                    if (marker.getTag() != null){
-                        if (marker.getTag().equals(key)){
-                            marker.setPosition(new LatLng(location.latitude,location.longitude));
+                for (Marker marker : mDriversMarkers) {
+                    if (marker.getTag() != null) {
+                        if (marker.getTag().equals(key)) {
+                            marker.setPosition(new LatLng(location.latitude, location.longitude));
                         }
                     }
                 }
@@ -259,7 +259,7 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
             }
             mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
         }
-        else {
+        else if (requestCode == SETTINGS_REQUEST_CODE && !gpsActived()){
             showAlertDialogNOGPS();
         }
     }
