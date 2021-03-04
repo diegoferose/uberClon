@@ -126,7 +126,7 @@ public class MapDriverActivity extends AppCompatActivity implements OnMapReadyCa
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationRequest.setSmallestDisplacement(5);
 
-        startLocation();
+
     }
 
     @Override
@@ -231,6 +231,7 @@ public class MapDriverActivity extends AppCompatActivity implements OnMapReadyCa
         }
     }
     void logout() {
+        disconnect();
         mAuthProvider.logout();
         Intent intent = new Intent(MapDriverActivity.this, MainActivity.class);
         startActivity(intent);

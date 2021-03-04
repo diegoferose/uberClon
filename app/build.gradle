@@ -39,10 +39,12 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:16.1.0'
     implementation 'com.google.android.gms:play-services-location:16.0.0'
     implementation 'com.firebase:geofire-android:2.2.0'
+    implementation 'com.google.android.libraries.places:places:1.1.0'
     //Implementacion para Progess Dialog
     implementation 'com.github.d-max:spots-dialog:1.1@aar'
     testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    implementation 'com.google.maps.android:android-maps-utils:0.5'
 }
 apply plugin: 'com.google.gms.google-services'
