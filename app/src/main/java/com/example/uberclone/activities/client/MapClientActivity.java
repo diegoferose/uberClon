@@ -12,6 +12,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
@@ -85,24 +87,16 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
 
     private String mDestination;
     private LatLng mDestinationLatLng;
-
+    private GoogleMap.OnCameraIdleListener mCameraListener;
 
     LocationCallback mLocationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(LocationResult locationResult) {
             for (Location location : locationResult.getLocations()) {
                 if (getApplicationContext() != null) {
-                    if (mMarker != null) {
-                        mMarker.remove();
-                    }
+
                     mCurrentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
 
-                    mMarker = mMap.addMarker(new MarkerOptions().position(
-                            new LatLng(location.getLatitude(), location.getLongitude())
-                            )
-                                    .title("Tu posicion")
-                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_my_location))
-                    );
                     // OBTENER LA LOCALIZACION DEL USUARIO EN TIEMPO REAL
                     mMap.moveCamera(CameraUpdateFactory.newCameraPosition(
                             new CameraPosition.Builder()
@@ -114,6 +108,7 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
                     if (mIsFirstTime) {
                         mIsFirstTime = false;
                         getActiveDrivers();
+                        //limitSearch();
                     }
                 }
             }
@@ -142,12 +137,31 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
         mPlaces = Places.createClient(this);
         instanceAutocompleteOrigin();
         instanceAutocompleteDestination();
+        onCameraMove();
     }
-
+    private void onCameraMove(){
+        mCameraListener = new GoogleMap.OnCameraIdleListener() {
+            @Override
+            public void onCameraIdle() {
+                try {
+                    Geocoder geocoder = new Geocoder(MapClientActivity.this);
+                    mOriginLatLng = mMap.getCameraPosition().target;
+                    List<Address> addressList = geocoder.getFromLocation(mOriginLatLng.latitude, mOriginLatLng.longitude, 1);
+                    String city = addressList.get(0).getLocality();
+                    String country = addressList.get(0).getCountryName();
+                    String address = addressList.get(0).getAddressLine(0);
+                    mOrigin = address + " " + city;
+                    mAutocomplete.setText(address + " " + city);
+                } catch (Exception e) {
+                    Log.d("Error: ", "Mensaje error: " + e.getMessage());
+                }
+            }
+        };
+    }
     private void instanceAutocompleteOrigin() {
         mAutocomplete = (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.placeAutocompleteOrigin);
         mAutocomplete.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.LAT_LNG, Place.Field.NAME));
-        mAutocomplete.setHint("Lugar de recogida");
+        mAutocomplete.setHint("Origen");
         mAutocomplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(@NonNull Place place) {
@@ -250,7 +264,11 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.getUiSettings().setZoomControlsEnabled(true);
-
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        mMap.setMyLocationEnabled(true);
+        mMap.setOnCameraIdleListener(mCameraListener);
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(1000);
         mLocationRequest.setFastestInterval(1000);
