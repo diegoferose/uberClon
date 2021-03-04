@@ -61,6 +61,17 @@
         android:src="@drawable/icon_my_location"
         android:layout_gravity="center"/>
 
+    <Button
+        android:id="@+id/btnRequestDriver"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="SOLICITAR VIAJE"
+        android:layout_gravity="bottom"
+        android:layout_margin="20dp"
+        android:background="@color/purple_700"
+        android:backgroundTint="@color/purple_700"
+        android:textColor="@color/white"/>
+
 
 
 

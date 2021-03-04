@@ -23,6 +23,9 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.uberclone.R;
 import com.example.uberclone.activities.MainActivity;
@@ -90,6 +93,7 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
     private String mDestination;
     private LatLng mDestinationLatLng;
     private GoogleMap.OnCameraIdleListener mCameraListener;
+    private Button mButtonRequestDriver;
 
     LocationCallback mLocationCallback = new LocationCallback() {
         @Override
@@ -130,6 +134,13 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
 
         mMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mMapFragment.getMapAsync(this);
+        mButtonRequestDriver = findViewById(R.id.btnRequestDriver);
+        mButtonRequestDriver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                requestDriver();
+            }
+        });
 
         //Instanciamos varables Place Autocomplete
         if (!Places.isInitialized()) {
@@ -140,6 +151,21 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
         instanceAutocompleteOrigin();
         instanceAutocompleteDestination();
         onCameraMove();
+    }
+    private void requestDriver() {
+
+        if (mOriginLatLng != null && mDestinationLatLng != null) {
+            Intent intent = new Intent(MapClientActivity.this, DetailRequestActivity.class);
+            intent.putExtra("origin_lat", mOriginLatLng.latitude);
+            intent.putExtra("origin_lng", mOriginLatLng.longitude);
+            intent.putExtra("destination_lat", mDestinationLatLng.latitude);
+            intent.putExtra("destination_lng", mDestinationLatLng.longitude);
+            startActivity(intent);
+        }
+        else {
+            Toast.makeText(this, "Debe seleccionar el lugar de origen y el destino", Toast.LENGTH_SHORT).show();
+        }
+
     }
     private void onCameraMove(){
         mCameraListener = new GoogleMap.OnCameraIdleListener() {
