@@ -77,10 +77,14 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
     //Variables para el Place autocomplete
     private PlacesClient mPlaces;
     private AutocompleteSupportFragment mAutocomplete;
+    private AutocompleteSupportFragment mAutocompleteDestination;
 
     //Varibales que guarda el origen y el destino del cliente
     private String mOrigin;
     private LatLng mOriginLatLng;
+
+    private String mDestination;
+    private LatLng mDestinationLatLng;
 
 
     LocationCallback mLocationCallback = new LocationCallback() {
@@ -136,8 +140,14 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
         }
 
         mPlaces = Places.createClient(this);
+        instanceAutocompleteOrigin();
+        instanceAutocompleteDestination();
+    }
+
+    private void instanceAutocompleteOrigin() {
         mAutocomplete = (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.placeAutocompleteOrigin);
         mAutocomplete.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.LAT_LNG, Place.Field.NAME));
+        mAutocomplete.setHint("Lugar de recogida");
         mAutocomplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(@NonNull Place place) {
@@ -146,7 +156,27 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
                 Log.d("PLACE", "Name: " + mOrigin);
                 Log.d("PLACE", "Lat: " + mOriginLatLng.latitude);
                 Log.d("PLACE", "Lng: " + mOriginLatLng.longitude);
+            }
 
+            @Override
+            public void onError(@NonNull Status status) {
+
+            }
+        });
+    }
+
+    private void instanceAutocompleteDestination() {
+        mAutocompleteDestination = (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.placeAutocompleteDestination);
+        mAutocompleteDestination.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.LAT_LNG, Place.Field.NAME));
+        mAutocompleteDestination.setHint("Destino");
+        mAutocompleteDestination.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(@NonNull Place place) {
+                mDestination = place.getName();
+                mDestinationLatLng = place.getLatLng();
+                Log.d("PLACE", "Name: " + mDestination);
+                Log.d("PLACE", "Lat: " + mDestinationLatLng.latitude);
+                Log.d("PLACE", "Lng: " + mDestinationLatLng.longitude);
             }
 
             @Override
