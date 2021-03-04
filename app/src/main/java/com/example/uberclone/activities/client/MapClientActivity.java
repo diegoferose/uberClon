@@ -49,11 +49,13 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.RectangularBounds;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.firebase.database.DatabaseError;
+import com.google.maps.android.SphericalUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -108,7 +110,7 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
                     if (mIsFirstTime) {
                         mIsFirstTime = false;
                         getActiveDrivers();
-                        //limitSearch();
+                        limitSearch();
                     }
                 }
             }
@@ -312,6 +314,15 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
         else if (requestCode == SETTINGS_REQUEST_CODE && !gpsActived()){
             showAlertDialogNOGPS();
         }
+    }
+
+    private void limitSearch() {
+        LatLng northSide = SphericalUtil.computeOffset(mCurrentLatLng, 5000, 0);
+        LatLng southSide = SphericalUtil.computeOffset(mCurrentLatLng, 5000, 180);
+        mAutocomplete.setCountry("COL");
+        mAutocomplete.setLocationBias(RectangularBounds.newInstance(southSide, northSide));
+        mAutocompleteDestination.setCountry("COL");
+        mAutocompleteDestination.setLocationBias(RectangularBounds.newInstance(southSide, northSide));
     }
 
     private void showAlertDialogNOGPS() {
