@@ -58,7 +58,7 @@
     <ImageView
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:src="@drawable/icon_my_location"
+        android:src="@drawable/location_client"
         android:layout_gravity="center"/>
 
     <Button
