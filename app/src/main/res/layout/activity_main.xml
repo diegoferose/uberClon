@@ -23,8 +23,8 @@
 
         //Se Ingresa el logo de la empresa
         <ImageView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
+            android:layout_width="350dp"
+            android:layout_height="350dp"
             android:src="@drawable/vanes"
             android:layout_marginTop="50dp"
             android:layout_gravity="center"/>
@@ -33,11 +33,12 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="UberClone es un aplicativo similar a Uber"
-            android:textAlignment="center"
+            android:text="SOLICITA TU VAN DONDE QUIERA QUE ESTES"
+           android:textAlignment="center"
             android:layout_margin="40dp"
             android:textSize="20sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:gravity="center_horizontal" />
 
         // Se crea el contenedor del boton
             <LinearLayout
