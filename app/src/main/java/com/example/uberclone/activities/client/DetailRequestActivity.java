@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.example.uberclone.R;
 import com.example.uberclone.includes.MyToolbar;
@@ -38,11 +39,24 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
     private double mExtraOriginLng;
     private double mExtraDestinationLat;
     private double mExtraDestinationLng;
+
+    private String mExtraOrigin;
+    private String mExtraDestination;
+
+
     private LatLng mOriginLatLng;
     private LatLng mDestinationLatLng;
     private GoogleApiProvider mGoogleApiProvider;
     private List<LatLng> mPolylineList;
     private PolylineOptions mPolylineOptions;
+
+    //Instanciamos vistar de detal_reques.xml
+    private TextView mTextViewOrigin;
+    private TextView mTextViewDestination;
+    private TextView mTextViewTime;
+    private TextView mTextViewDistance;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,9 +70,24 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
         mExtraDestinationLat = getIntent().getDoubleExtra("destination_lat", 0);
         mExtraDestinationLng = getIntent().getDoubleExtra("destination_lng", 0);
 
+        //Instanciamos variables para vista solicitar viajes
+        mExtraOrigin = getIntent().getStringExtra("origin");
+        mExtraDestination = getIntent().getStringExtra("destination");
+
         mOriginLatLng = new LatLng(mExtraOriginLat, mExtraOriginLng);
         mDestinationLatLng = new LatLng(mExtraDestinationLat, mExtraDestinationLng);
         mGoogleApiProvider = new GoogleApiProvider(DetailRequestActivity.this);
+
+        // Instanciamos variables para solicitar viajes
+        mTextViewOrigin = findViewById(R.id.textViewOrigin);
+        mTextViewDestination = findViewById(R.id.textViewDestination);
+        mTextViewDistance = findViewById(R.id.textViewDistance);
+        mTextViewTime = findViewById(R.id.textViewTime);
+
+        //Ingresamos valores a las variables
+        mTextViewOrigin.setText(mExtraOrigin);
+        mTextViewDestination.setText(mExtraDestination);
+
 
     }
     private void drawRoute() {
@@ -75,11 +104,21 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
                     mPolylineList = DecodePoints.decodePoly(points);
                     mPolylineOptions = new PolylineOptions();
                     mPolylineOptions.color(Color.DKGRAY);
-                    mPolylineOptions.width(8f);
+                    mPolylineOptions.width(13f);
                     mPolylineOptions.startCap(new SquareCap());
                     mPolylineOptions.jointType(JointType.ROUND);
                     mPolylineOptions.addAll(mPolylineList);
                     mMap.addPolyline(mPolylineOptions);
+
+                    // Obtener Distancia y duracion
+                    JSONArray legs = route.getJSONArray("legs");
+                    JSONObject leg = legs.getJSONObject(0);
+                    JSONObject distance = leg.getJSONObject("distance");
+                    JSONObject duration =  leg.getJSONObject("duration");
+                    String distanceText = distance.getString("text");
+                    String durationText = duration.getString("text");
+                    mTextViewTime.setText(durationText);
+                    mTextViewDistance.setText(distanceText);
 
                 } catch(Exception e) {
                     Log.d("Error", "Error encontrado " + e.getMessage());

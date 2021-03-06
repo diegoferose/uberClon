@@ -10,6 +10,7 @@ tools:context=".activities.client.DetailRequestActivity">
 
 <include layout="@layout/action_bar_toollbar" ></include>
 
+    // Contenedor principal
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -24,12 +25,14 @@ tools:context=".activities.client.DetailRequestActivity">
         android:name="com.google.android.gms.maps.SupportMapFragment"
         />
 
+    // contenedor campo origen
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="20dp">
 
+        // Descripcion del campo
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -37,15 +40,17 @@ tools:context=".activities.client.DetailRequestActivity">
             android:textSize="16sp"
             android:textStyle="bold"/>
 
+        // Informacion campo Origen
         <TextView
             android:id="@+id/textViewOrigin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Carrera 34 calle 5"
+            android:text=""
             android:textSize="16sp"/>
 
     </LinearLayout>
 
+    // Separador de campos
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -54,12 +59,14 @@ tools:context=".activities.client.DetailRequestActivity">
         android:layout_marginLeft="20dp"
         />
 
+    // contenedor campo destino
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="20dp">
 
+        // descripcion campo destino
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -67,15 +74,75 @@ tools:context=".activities.client.DetailRequestActivity">
             android:textSize="16sp"
             android:textStyle="bold"/>
 
+        // informacion campor destino
         <TextView
             android:id="@+id/textViewDestination"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Carrera 34 calle 5"
+            android:text=""
             android:textSize="16sp"/>
-
     </LinearLayout>
 
+
+    // contenedor campo tiempo y distancia
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="20dp">
+
+            // contenedor campo tiempo
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_weight="1">
+
+                //creacion campo tiempo
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tiempo: "
+                    android:textSize="16sp"
+                    android:textStyle="bold"/>
+
+                // informacion campo tiempo
+                <TextView
+                    android:id="@+id/textViewTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="16sp"/>
+            </LinearLayout>
+
+            //contenedor campo distancia
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_weight="1">
+
+                //creacion campo distancia
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Distancia: "
+                    android:textSize="16sp"
+                    android:textStyle="bold"/>
+
+                // Informacion campo distancia
+                <TextView
+                    android:id="@+id/textViewDistance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="16sp"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    //Boton campo solicitar ahora
     <Button
         android:id="@+id/btnRequestNow"
         android:layout_width="match_parent"
@@ -83,6 +150,7 @@ tools:context=".activities.client.DetailRequestActivity">
         android:text="SOLICITAR AHORA"
         android:background="@color/purple_700"
         android:textColor="@color/white"/>
+
 
 </LinearLayout>
 
