@@ -101,7 +101,8 @@ public class RequestDriverActivity extends AppCompatActivity {
                     mIdDriverFound = key;
                     mDriverFoundLatLng = new LatLng(location.latitude,location.longitude);
                     mTextViewLookingFor.setText("CONDUCTOR ENCONTRADO \n ESPERANDO RESPUESTA");
-                    createClientBooking();
+                    sendNotification();
+                    //createClientBooking();
                     Log.d("DRIVER","ID: " + mIdDriverFound);
                 }
 
@@ -177,20 +178,21 @@ public class RequestDriverActivity extends AppCompatActivity {
 
 
     }
-    private void sendNotification(final String time, final String km) {
+    private void sendNotification( /*final String time, final String km*/ ){
         mTokenProvider.getToken(mIdDriverFound).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    String token = dataSnapshot.child("token").getValue().toString();
+                    String token = dataSnapshot.child("token").getValue().toString();;
                     Map<String, String> map = new HashMap<>();
-                    map.put("title", "SOLICITUD DE SERVICIO A " + time + " DE TU POSICION");
+                    map.put("title", "SOLICITUD DE SERVICIO A " /*+ time + " DE TU POSICION"*/);
                     map.put("body",
-                            "Un cliente esta solicitando un servicio a una distancia de " + km + "\n" +
+                            "Un cliente esta solicitando un servicio a una distancia de " /*+ km + "\n" +
                                     "Recoger en: " + mExtraOrigin + "\n" +
-                                    "Destino: " + mExtraDestination
+                                    "Destino: " + mExtraDestination*/
                     );
-                    map.put("idClient", mAuthProvider.getId());
+
+                    /*map.put("idClient", mAuthProvider.getId());*/
                     FCMBody fcmBody = new FCMBody(token, "high", map);
                     mNotificationProvider.sendNotification(fcmBody).enqueue(new Callback<FCMResponse>() {
                         @Override
@@ -217,7 +219,7 @@ public class RequestDriverActivity extends AppCompatActivity {
                                             checkStatusClientBooking();
                                         }
                                     });*/
-                                    //Toast.makeText(RequestDriverActivity.this, "La notificacion se ha enviado correctamente", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(RequestDriverActivity.this, "La notificacion se ha enviado correctamente", Toast.LENGTH_SHORT).show();
                                 }
                                 else {
                                     Toast.makeText(RequestDriverActivity.this, "No se pudo enviar la notificacion", Toast.LENGTH_SHORT).show();
