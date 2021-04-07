@@ -67,7 +67,9 @@ public class NotificacionHelper extends ContextWrapper {
                 .setAutoCancel(true)
                 .setSound(soundUri)
                 .setContentIntent(intent)
-                .setSmallIcon(R.drawable.ic_car);
+                .setSmallIcon(R.drawable.ic_car)
+                .setStyle(new Notification.BigTextStyle()
+                .bigText(body).setBigContentTitle(title));
 
     }
 
@@ -79,7 +81,8 @@ public class NotificacionHelper extends ContextWrapper {
                 .setAutoCancel(true)
                 .setSound(soundUri)
                 .setContentIntent(intent)
-                .setSmallIcon(R.drawable.ic_car);
+                .setSmallIcon(R.drawable.ic_car)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(body).setBigContentTitle(title));
 
     }
 }
