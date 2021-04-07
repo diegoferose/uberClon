@@ -10,10 +10,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.example.uberclone.Models.ClientBooking;
 import com.example.uberclone.Models.FCMBody;
 import com.example.uberclone.Models.FCMResponse;
 import com.example.uberclone.R;
 import com.example.uberclone.providers.AuthProvider;
+import com.example.uberclone.providers.ClientBookingProvider;
 import com.example.uberclone.providers.GeofireProvider;
 import com.example.uberclone.providers.GoogleApiProvider;
 import com.example.uberclone.providers.NotificationProvider;
@@ -58,7 +60,7 @@ public class RequestDriverActivity extends AppCompatActivity {
     private LatLng mDriverFoundLatLng;
     private NotificationProvider mNotificationProvider;
     private TokenProvider mTokenProvider;
-    //private ClientBookingProvider mClientBookingProvider;
+    private ClientBookingProvider mClientBookingProvider;
     private AuthProvider mAuthProvider;
     private GoogleApiProvider mGoogleApiProvider;
 
@@ -75,20 +77,26 @@ public class RequestDriverActivity extends AppCompatActivity {
 
         mAnimation.playAnimation();
 
-        mExtraOriginLat = getIntent().getDoubleExtra("origin_lat",0);
-        mExtraOriginLng = getIntent().getDoubleExtra("origin_lng",0);
+        mExtraOrigin = getIntent().getStringExtra("origin");
+        mExtraDestination = getIntent().getStringExtra("destination");
+        mExtraOriginLat = getIntent().getDoubleExtra("origin_lat", 0);
+        mExtraOriginLng = getIntent().getDoubleExtra("origin_lng", 0);
+        mExtraDestinationLat = getIntent().getDoubleExtra("destination_lat", 0);
+        mExtraDestinationLng = getIntent().getDoubleExtra("destination_lng", 0);
         mOriginLatLng = new LatLng(mExtraOriginLat,mExtraOriginLng);
+        mDestinationLatLng= new LatLng(mExtraDestinationLat, mExtraDestinationLng);
 
         mGeofireProvider = new GeofireProvider();
         mTokenProvider = new TokenProvider();
         mNotificationProvider = new NotificationProvider();
-        //mClientBookingProvider = new ClientBookingProvider();
+        mClientBookingProvider = new ClientBookingProvider();
         mAuthProvider = new AuthProvider();
         mGoogleApiProvider = new GoogleApiProvider(RequestDriverActivity.this);
 
         getClosesDriver();
 
     }
+
 
     //METODO PARA OBTENER EL CONDUICTOR MAS CERCANO
     private void getClosesDriver(){
@@ -101,8 +109,7 @@ public class RequestDriverActivity extends AppCompatActivity {
                     mIdDriverFound = key;
                     mDriverFoundLatLng = new LatLng(location.latitude,location.longitude);
                     mTextViewLookingFor.setText("CONDUCTOR ENCONTRADO \n ESPERANDO RESPUESTA");
-                    sendNotification();
-                    //createClientBooking();
+                    createClientBooking();
                     Log.d("DRIVER","ID: " + mIdDriverFound);
                 }
 
@@ -163,7 +170,9 @@ public class RequestDriverActivity extends AppCompatActivity {
                     JSONObject duration = leg.getJSONObject("duration");
                     String distanceText = distance.getString("text");
                     String durationText = duration.getString("text");
-                    //sendNotification(durationText, distanceText);
+
+
+                    sendNotification(durationText, distanceText);
 
                 } catch(Exception e) {
                     Log.d("Error", "Error encontrado " + e.getMessage());
@@ -178,28 +187,27 @@ public class RequestDriverActivity extends AppCompatActivity {
 
 
     }
-    private void sendNotification( /*final String time, final String km*/ ){
+    private void sendNotification(final String time, final String km) {
         mTokenProvider.getToken(mIdDriverFound).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    String token = dataSnapshot.child("token").getValue().toString();;
+                    String token = dataSnapshot.child("token").getValue().toString();
                     Map<String, String> map = new HashMap<>();
-                    map.put("title", "SOLICITUD DE SERVICIO A " /*+ time + " DE TU POSICION"*/);
+                    map.put("title", "SOLICITUD DE SERVICIO A " + time + " DE TU POSICION");
                     map.put("body",
-                            "Un cliente esta solicitando un servicio a una distancia de " /*+ km + "\n" +
+                            "Un cliente esta solicitando un servicio a una distancia de " + km + "\n" +
                                     "Recoger en: " + mExtraOrigin + "\n" +
-                                    "Destino: " + mExtraDestination*/
+                                    "Destino: " + mExtraDestination
                     );
-
-                    /*map.put("idClient", mAuthProvider.getId());*/
+                    map.put("idClient", mAuthProvider.getId());
                     FCMBody fcmBody = new FCMBody(token, "high", map);
                     mNotificationProvider.sendNotification(fcmBody).enqueue(new Callback<FCMResponse>() {
                         @Override
                         public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
                             if (response.body() != null) {
                                 if (response.body().getSuccess() == 1) {
-                                    /*ClientBooking clientBooking = new ClientBooking(
+                                    ClientBooking clientBooking = new ClientBooking(
                                             mAuthProvider.getId(),
                                             mIdDriverFound,
                                             mExtraDestination,
@@ -216,10 +224,10 @@ public class RequestDriverActivity extends AppCompatActivity {
                                     mClientBookingProvider.create(clientBooking).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
-                                            checkStatusClientBooking();
+                                            //checkStatusClientBooking();
                                         }
-                                    });*/
-                                    Toast.makeText(RequestDriverActivity.this, "La notificacion se ha enviado correctamente", Toast.LENGTH_SHORT).show();
+                                    });
+                                    //Toast.makeText(RequestDriverActivity.this, "La notificacion se ha enviado correctamente", Toast.LENGTH_SHORT).show();
                                 }
                                 else {
                                     Toast.makeText(RequestDriverActivity.this, "No se pudo enviar la notificacion", Toast.LENGTH_SHORT).show();
