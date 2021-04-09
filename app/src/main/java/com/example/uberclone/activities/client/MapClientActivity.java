@@ -27,11 +27,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.uberclone.Models.Token;
 import com.example.uberclone.R;
 import com.example.uberclone.activities.MainActivity;
 import com.example.uberclone.includes.MyToolbar;
 import com.example.uberclone.providers.AuthProvider;
 import com.example.uberclone.providers.GeofireProvider;
+import com.example.uberclone.providers.TokenProvider;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
 import com.firebase.geofire.GeoQueryEventListener;
@@ -77,6 +79,9 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
     private Marker mMarker;
 
     private GeofireProvider mGeoFireProvider;
+
+    private TokenProvider mTokenProvider;
+
     private LatLng mCurrentLatLng;
     private List<Marker> mDriversMarkers = new ArrayList<>();
     private boolean mIsFirstTime = true;
@@ -129,6 +134,7 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
 
         mAuthProvider = new AuthProvider();
         mGeoFireProvider = new GeofireProvider();
+        mTokenProvider = new TokenProvider();
 
         mFusedLocation = LocationServices.getFusedLocationProviderClient(this);
 
@@ -151,6 +157,7 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
         instanceAutocompleteOrigin();
         instanceAutocompleteDestination();
         onCameraMove();
+        generateToken();
     }
     private void requestDriver() {
 
@@ -232,7 +239,7 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     private void getActiveDrivers() {
-        mGeoFireProvider.getActiveDrivers(mCurrentLatLng).addGeoQueryEventListener(new GeoQueryEventListener() {
+        mGeoFireProvider.getActiveDrivers(mCurrentLatLng, 10).addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
                 //AÑADIREMOS LOS MARCADORES DE LOS CONDUCTORES QUE SE CONECTEN EN LA APLICACION
@@ -441,6 +448,11 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
         Intent intent = new Intent(MapClientActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    void generateToken(){
+        mTokenProvider.create(mAuthProvider.getId());
+
     }
 
 }

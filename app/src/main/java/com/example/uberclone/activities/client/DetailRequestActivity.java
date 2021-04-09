@@ -2,9 +2,12 @@ package com.example.uberclone.activities.client;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.uberclone.R;
@@ -56,6 +59,10 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
     private TextView mTextViewTime;
     private TextView mTextViewDistance;
 
+    // Boton de solicitar viaje
+    private Button mButtonRequest;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,8 +95,32 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
         mTextViewOrigin.setText(mExtraOrigin);
         mTextViewDestination.setText(mExtraDestination);
 
+        //Instacionamos boton del Request de solicitar viaje
+        mButtonRequest = findViewById(R.id.btnRequestNow);
+
+        // Evento del boton mbuttonRequest de solicitar viajes
+        mButtonRequest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToRequestDriver();
+            }
+        });
+
 
     }
+
+    private void goToRequestDriver() {
+        Intent intent = new Intent(DetailRequestActivity.this, RequestDriverActivity.class);
+        intent.putExtra("origin_lat", mOriginLatLng.latitude);
+        intent.putExtra("origin_lng", mOriginLatLng.longitude);
+        intent.putExtra("origin", mExtraOrigin);
+        intent.putExtra("destination", mExtraDestination);
+        intent.putExtra("destination_lat", mDestinationLatLng.latitude);
+        intent.putExtra("destination_lng", mDestinationLatLng.longitude);
+        startActivity(intent);
+        finish();
+    }
+
     private void drawRoute() {
         mGoogleApiProvider.getDirections(mOriginLatLng, mDestinationLatLng).enqueue(new Callback<String>() {
             @Override

@@ -28,6 +28,7 @@ import com.example.uberclone.activities.MainActivity;
 import com.example.uberclone.includes.MyToolbar;
 import com.example.uberclone.providers.AuthProvider;
 import com.example.uberclone.providers.GeofireProvider;
+import com.example.uberclone.providers.TokenProvider;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -48,6 +49,7 @@ public class MapDriverActivity extends AppCompatActivity implements OnMapReadyCa
     private SupportMapFragment mMapFragment;
     private AuthProvider mAuthProvider;
     private GeofireProvider mGeofireProvider;
+    private TokenProvider mTokenprovider;
     private LocationRequest mLocationRequest;
     private FusedLocationProviderClient mFusedLocation;
     private final static int LOCATION_REQUEST_CODE = 1;
@@ -93,6 +95,7 @@ public class MapDriverActivity extends AppCompatActivity implements OnMapReadyCa
         MyToolbar.show(this, "Conductor", false);
         mAuthProvider = new AuthProvider();
         mGeofireProvider = new GeofireProvider();
+        mTokenprovider = new TokenProvider();
         mFusedLocation = LocationServices.getFusedLocationProviderClient(this);
         mMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mMapFragment.getMapAsync(this);
@@ -108,6 +111,7 @@ public class MapDriverActivity extends AppCompatActivity implements OnMapReadyCa
                 }
             }
         });
+        generateToken();
     }
 
     @Override
@@ -256,5 +260,10 @@ public class MapDriverActivity extends AppCompatActivity implements OnMapReadyCa
             Toast.makeText(this, "No te puedes desconectar"+mAuthProvider.getId(), Toast.LENGTH_SHORT).show();
             mGeofireProvider.saveLocation(mAuthProvider.getId(), mCurrentLatLng);
         }
+    }
+
+    void generateToken(){
+        mTokenprovider.create(mAuthProvider.getId());
+
     }
 }
