@@ -3,6 +3,7 @@ package com.example.uberclone.activities.client;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -224,7 +225,7 @@ public class RequestDriverActivity extends AppCompatActivity {
                                     mClientBookingProvider.create(clientBooking).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
-                                            //checkStatusClientBooking();
+                                            checkStatusClientBooking();
                                         }
                                     });
                                     //Toast.makeText(RequestDriverActivity.this, "La notificacion se ha enviado correctamente", Toast.LENGTH_SHORT).show();
@@ -254,6 +255,42 @@ public class RequestDriverActivity extends AppCompatActivity {
 
             }
         });
+
+    }
+
+    private void checkStatusClientBooking() {
+       mListener = mClientBookingProvider.getStatus(mAuthProvider.getId()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    String status = snapshot.getValue().toString();
+                    if (status.equals("accept")){
+                        Intent intent = new Intent(RequestDriverActivity.this, MapClientBookingActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                    else if (status.equals("cancel")){
+                        Toast.makeText(RequestDriverActivity.this,"El conductor no acepto el viaje", Toast.LENGTH_SHORT);
+                        Intent intent = new Intent(RequestDriverActivity.this,MapClientActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mListener != null){
+        mClientBookingProvider.getStatus(mAuthProvider.getId()).removeEventListener(mListener);
+        }
 
     }
 }
