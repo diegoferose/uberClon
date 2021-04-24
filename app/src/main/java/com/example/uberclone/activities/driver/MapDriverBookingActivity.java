@@ -21,11 +21,13 @@ import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.uberclone.R;
 import com.example.uberclone.activities.MainActivity;
 import com.example.uberclone.providers.AuthProvider;
+import com.example.uberclone.providers.ClientProvider;
 import com.example.uberclone.providers.GeofireProvider;
 import com.example.uberclone.providers.TokenProvider;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -42,6 +44,9 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 public class MapDriverBookingActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -49,6 +54,7 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
     private SupportMapFragment mMapFragment;
     private AuthProvider mAuthProvider;
     private GeofireProvider mGeofireProvider;
+    private ClientProvider mClientProvider;
     private TokenProvider mTokenprovider;
     private LocationRequest mLocationRequest;
     private FusedLocationProviderClient mFusedLocation;
@@ -56,6 +62,15 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
     private final static int SETTINGS_REQUEST_CODE = 2;
     private Marker mMarker;
     private LatLng mCurrentLatLng;
+
+    //Variables para mostrar los datos cliente que solicito el transporte
+
+    private TextView mTextViewClientBooking;
+    private TextView mTextViewEmailClientBooking;
+
+    //
+    private String mExtraClientId;
+
 
 
     LocationCallback mLocationCallback = new LocationCallback() {
@@ -100,11 +115,39 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
         mAuthProvider = new AuthProvider();
         mGeofireProvider = new GeofireProvider("drivers_working");
         mTokenprovider = new TokenProvider();
+        mClientProvider = new ClientProvider();
+
         mFusedLocation = LocationServices.getFusedLocationProviderClient(this);
+
         mMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mMapFragment.getMapAsync(this);
 
+        mTextViewClientBooking = findViewById(R.id.textViewClientBooking);
+        mTextViewEmailClientBooking = findViewById(R.id.textViewEmailClientBooking);
 
+        mExtraClientId = getIntent().getStringExtra("idClient");
+        getClientBooking();
+
+
+    }
+
+    private void getClientBooking() {
+        mClientProvider.getClient(mExtraClientId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                    String email = snapshot.child("email").getValue().toString();
+                    String name = snapshot.child("name").getValue().toString();
+                    mTextViewClientBooking.setText(name);
+                    mTextViewEmailClientBooking.setText(email);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     //ESTA
