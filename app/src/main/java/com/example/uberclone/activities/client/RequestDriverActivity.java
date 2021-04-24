@@ -87,7 +87,7 @@ public class RequestDriverActivity extends AppCompatActivity {
         mOriginLatLng = new LatLng(mExtraOriginLat,mExtraOriginLng);
         mDestinationLatLng= new LatLng(mExtraDestinationLat, mExtraDestinationLng);
 
-        mGeofireProvider = new GeofireProvider();
+        mGeofireProvider = new GeofireProvider("active_drivers");
         mTokenProvider = new TokenProvider();
         mNotificationProvider = new NotificationProvider();
         mClientBookingProvider = new ClientBookingProvider();

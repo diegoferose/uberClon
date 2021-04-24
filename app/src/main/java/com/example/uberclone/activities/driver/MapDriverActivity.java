@@ -43,6 +43,9 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 public class MapDriverActivity extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
@@ -58,6 +61,9 @@ public class MapDriverActivity extends AppCompatActivity implements OnMapReadyCa
     private Button mButtonConnect;
     private boolean mIsConnect = false;
     private LatLng mCurrentLatLng;
+
+    private ValueEventListener mListener;
+
     LocationCallback mLocationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(LocationResult locationResult) {
@@ -94,7 +100,7 @@ public class MapDriverActivity extends AppCompatActivity implements OnMapReadyCa
         setContentView(R.layout.activity_map_driver);
         MyToolbar.show(this, "Conductor", false);
         mAuthProvider = new AuthProvider();
-        mGeofireProvider = new GeofireProvider();
+        mGeofireProvider = new GeofireProvider("active_drivers");
         mTokenprovider = new TokenProvider();
         mFusedLocation = LocationServices.getFusedLocationProviderClient(this);
         mMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -112,6 +118,31 @@ public class MapDriverActivity extends AppCompatActivity implements OnMapReadyCa
             }
         });
         generateToken();
+        isDriverWorking();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mListener != null){
+            mGeofireProvider.isDriverWorking(mAuthProvider.getId()).removeEventListener(mListener);
+        }
+    }
+
+    private void isDriverWorking() {
+       mListener= mGeofireProvider.isDriverWorking(mAuthProvider.getId()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                    disconnect();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     @Override
