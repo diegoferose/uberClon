@@ -22,6 +22,7 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -102,6 +103,10 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
     private boolean mIsFirstTime = true;
 
 
+    private  Button mButtonStartBooking;
+    private  Button mButtonFinishBooking;
+
+
 
     LocationCallback mLocationCallback = new LocationCallback() {
         @Override
@@ -163,13 +168,40 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
 
         mTextViewOriginClientBooking = findViewById(R.id.textViewOriginClientBooking);
         mTextViewDestinationClientBooking= findViewById(R.id.textViewDestinationClientBooking);
+        mButtonStartBooking = findViewById(R.id.btnStartBooking);
+        mButtonFinishBooking = findViewById(R.id.btnFinishBooking);
 
         mExtraClientId = getIntent().getStringExtra("idClient");
         mGoogleApiProvider = new GoogleApiProvider(MapDriverBookingActivity.this);
 
         getClient();
 
+        mButtonStartBooking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startBooking();
+            }
+        });
 
+        mButtonFinishBooking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finishBooking();
+
+            }
+        });
+
+
+    }
+
+    private void finishBooking() {
+        mClientBookingProvider.updateStatus(mExtraClientId,"Finish");
+    }
+
+    private void startBooking() {
+        mClientBookingProvider.updateStatus(mExtraClientId,"start");
+        mButtonStartBooking.setVisibility(View.GONE);
+        mButtonFinishBooking.setVisibility(View.VISIBLE);
     }
 
     private void drawRoute() {
