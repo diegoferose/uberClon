@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -96,6 +97,7 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
     private TextView mTextViewEmailClientBooking;
     private TextView mTextViewOriginClientBooking;
     private TextView mTextViewDestinationClientBooking;
+    private TextView mTextViewStatusBooking;
 
     private GoogleApiProvider mGoogleApiProvider;
     private List<LatLng> mPolylineList;
@@ -103,6 +105,7 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
 
     private ValueEventListener mListener;
     private String mIdDriver;
+    private ValueEventListener mListenerStatus;
 
 
     @Override
@@ -131,11 +134,57 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
 
         mTextViewClientBooking = findViewById(R.id.textViewDriverBooking);
         mTextViewEmailClientBooking = findViewById(R.id.textViewEmailDriverBooking);
+        mTextViewStatusBooking = findViewById(R.id.textViewStatusBooking);
 
         mTextViewOriginClientBooking = findViewById(R.id.textViewOriginDriverBooking);
         mTextViewDestinationClientBooking= findViewById(R.id.textViewDestinationDriverBooking);
 
+        getStatus();
+
         getClientBooking();
+    }
+
+    private void getStatus() {
+        mListenerStatus = mClientBookingProvider.getStatus(mAuthProvider.getId()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                    String status = snapshot.getValue().toString();
+                    if (status.equals("accept")){
+                        mTextViewStatusBooking.setText("Estado :Aceptado");
+                    }
+                    if (status.equals("start")){
+                        mTextViewStatusBooking.setText("Estado : Viaje Iniciado");
+                        startBooking();
+                    }
+                    else if (status.equals("finish")){
+                        mTextViewStatusBooking.setText("Estado : Viaje Finalizado");
+                        finishBooking();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void startBooking() {
+        mMap.clear();
+        mMap.addMarker(new MarkerOptions()
+                .position(mDestinationLatLng)
+                .title("Destino ")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_ubicacion)));
+        drawRoute(mDestinationLatLng);
+
+    }
+
+    private void finishBooking() {
+        Intent intent= new Intent(MapClientBookingActivity.this, CalificationDriverActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     @Override
@@ -143,6 +192,9 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
         super.onDestroy();
         if (mListener != null){
             mGeoFireProvider.getDriverLocation(mIdDriver).removeEventListener(mListener);
+        }
+        if (mListenerStatus != null){
+            mClientBookingProvider.getStatus(mAuthProvider.getId()).removeEventListener(mListenerStatus);
         }
     }
 
@@ -237,7 +289,7 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
                                         .zoom(14f)
                                         .build()
                         ));
-                        drawRoute();
+                        drawRoute(mOriginLatLng);
                     }
                 }
 
@@ -250,8 +302,8 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
         });
     }
 
-    private void drawRoute() {
-        mGoogleApiProvider.getDirections(mDriverLatlng, mOriginLatLng).enqueue(new Callback<String>() {
+    private void drawRoute(LatLng latLng) {
+        mGoogleApiProvider.getDirections(mDriverLatlng, latLng).enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 try {

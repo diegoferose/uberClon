@@ -203,7 +203,7 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
     }
 
     private void finishBooking() {
-        mClientBookingProvider.updateStatus(mExtraClientId, "Finish");
+        mClientBookingProvider.updateStatus(mExtraClientId, "finish");
         Intent intent = new Intent(MapDriverBookingActivity.this, CalificationClientActivity.class);
         startActivity(intent);
         finish();
