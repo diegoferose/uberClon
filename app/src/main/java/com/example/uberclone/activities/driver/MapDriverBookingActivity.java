@@ -204,12 +204,18 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
 
     private void finishBooking() {
         mClientBookingProvider.updateStatus(mExtraClientId, "Finish");
+        Intent intent = new Intent(MapDriverBookingActivity.this, CalificationClientActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private void startBooking() {
         mClientBookingProvider.updateStatus(mExtraClientId, "start");
         mButtonStartBooking.setVisibility(View.GONE);
         mButtonFinishBooking.setVisibility(View.VISIBLE);
+        mMap.clear();
+        mMap.addMarker(new MarkerOptions().position(mDestinationLatLng).title("Destino").icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_ubicacion)));
+        drawRoute(mDestinationLatLng);
     }
 
     private double getDistanceBetween(LatLng clientLatLng, LatLng driverLatLng) {
@@ -226,8 +232,8 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
 
     }
 
-    private void drawRoute() {
-        mGoogleApiProvider.getDirections(mCurrentLatLng, mOriginLatLng).enqueue(new Callback<String>() {
+    private void drawRoute(LatLng latLng) {
+        mGoogleApiProvider.getDirections(mCurrentLatLng, latLng).enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 try {
@@ -284,7 +290,7 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
                     mTextViewOriginClientBooking.setText("Recoger en :" + origin);
                     mTextViewDestinationClientBooking.setText("Destino: " + destination);
                     mMap.addMarker(new MarkerOptions().position(mOriginLatLng).title("Recoger aqui").icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_ubicacion)));
-                    drawRoute();
+                    drawRoute(mOriginLatLng);
 
 
                 }

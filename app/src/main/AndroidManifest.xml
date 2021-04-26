@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.UberClone">
-        <activity android:name=".activities.driver.MapDriverBookingActivity"></activity>
+        <activity android:name=".activities.driver.CalificationClientActivity"></activity>
+        <activity android:name=".activities.driver.MapDriverBookingActivity" />
         <activity android:name=".activities.client.MapClientBookingActivity" />
 
         <receiver
