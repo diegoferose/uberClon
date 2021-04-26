@@ -101,11 +101,11 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
     private PolylineOptions mPolylineOptions;
 
     private boolean mIsFirstTime = true;
+    private boolean mIsCloseToClient = false;
 
 
-    private  Button mButtonStartBooking;
-    private  Button mButtonFinishBooking;
-
+    private Button mButtonStartBooking;
+    private Button mButtonFinishBooking;
 
 
     LocationCallback mLocationCallback = new LocationCallback() {
@@ -167,9 +167,11 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
         mTextViewEmailClientBooking = findViewById(R.id.textViewEmailClientBooking);
 
         mTextViewOriginClientBooking = findViewById(R.id.textViewOriginClientBooking);
-        mTextViewDestinationClientBooking= findViewById(R.id.textViewDestinationClientBooking);
+        mTextViewDestinationClientBooking = findViewById(R.id.textViewDestinationClientBooking);
         mButtonStartBooking = findViewById(R.id.btnStartBooking);
         mButtonFinishBooking = findViewById(R.id.btnFinishBooking);
+
+
 
         mExtraClientId = getIntent().getStringExtra("idClient");
         mGoogleApiProvider = new GoogleApiProvider(MapDriverBookingActivity.this);
@@ -179,7 +181,13 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
         mButtonStartBooking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startBooking();
+                if (mIsCloseToClient){
+                    startBooking();
+                }
+                else {
+                    Toast.makeText(MapDriverBookingActivity.this, "Debes estar mas cerca a la posicion de recogida", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
@@ -195,13 +203,27 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
     }
 
     private void finishBooking() {
-        mClientBookingProvider.updateStatus(mExtraClientId,"Finish");
+        mClientBookingProvider.updateStatus(mExtraClientId, "Finish");
     }
 
     private void startBooking() {
-        mClientBookingProvider.updateStatus(mExtraClientId,"start");
+        mClientBookingProvider.updateStatus(mExtraClientId, "start");
         mButtonStartBooking.setVisibility(View.GONE);
         mButtonFinishBooking.setVisibility(View.VISIBLE);
+    }
+
+    private double getDistanceBetween(LatLng clientLatLng, LatLng driverLatLng) {
+        double distance = 0;
+        Location clientLocation = new Location("");
+        Location driverLocation = new Location("");
+        clientLocation.setLatitude(clientLatLng.latitude);
+        clientLocation.setLongitude(clientLatLng.longitude);
+        driverLocation.setLatitude(driverLatLng.latitude);
+        driverLocation.setLongitude(driverLatLng.longitude);
+        distance = clientLocation.distanceTo(driverLocation);
+        return distance;
+
+
     }
 
     private void drawRoute() {
@@ -228,12 +250,12 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
                     JSONArray legs = route.getJSONArray("legs");
                     JSONObject leg = legs.getJSONObject(0);
                     JSONObject distance = leg.getJSONObject("distance");
-                    JSONObject duration =  leg.getJSONObject("duration");
+                    JSONObject duration = leg.getJSONObject("duration");
                     String distanceText = distance.getString("text");
                     String durationText = duration.getString("text");
 
 
-                } catch(Exception e) {
+                } catch (Exception e) {
                     Log.d("Error", "Error encontrado " + e.getMessage());
                 }
             }
@@ -249,7 +271,7 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
         mClientBookingProvider.getClientBooking(mExtraClientId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()){
+                if (snapshot.exists()) {
                     String destination = snapshot.child("destination").getValue().toString();
                     String origin = snapshot.child("origin").getValue().toString();
                     double destinatioLat = Double.parseDouble(snapshot.child("destinationLat").getValue().toString());
@@ -258,7 +280,7 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
                     double originLat = Double.parseDouble(snapshot.child("originLat").getValue().toString());
                     double originLng = Double.parseDouble(snapshot.child("originLng").getValue().toString());
                     mOriginLatLng = new LatLng(originLat, originLng);
-                    mDestinationLatLng = new LatLng(destinatioLat,destinatioLng);
+                    mDestinationLatLng = new LatLng(destinatioLat, destinatioLng);
                     mTextViewOriginClientBooking.setText("Recoger en :" + origin);
                     mTextViewDestinationClientBooking.setText("Destino: " + destination);
                     mMap.addMarker(new MarkerOptions().position(mOriginLatLng).title("Recoger aqui").icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_ubicacion)));
@@ -279,7 +301,7 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
         mClientProvider.getClient(mExtraClientId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()){
+                if (snapshot.exists()) {
                     String email = snapshot.child("email").getValue().toString();
                     String name = snapshot.child("name").getValue().toString();
                     mTextViewClientBooking.setText(name);
@@ -354,8 +376,7 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
                 return;
             }
             mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-        }
-        else {
+        } else {
             showAlertDialogNOGPS();
         }
     }
@@ -389,19 +410,16 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 if (gpsActived()) {
                     mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-                }
-                else {
+                } else {
                     showAlertDialogNOGPS();
                 }
-            }
-            else {
+            } else {
                 checkLocationPermissions();
             }
         } else {
             if (gpsActived()) {
                 mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-            }
-            else {
+            } else {
                 showAlertDialogNOGPS();
             }
         }
@@ -417,14 +435,13 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                ActivityCompat.requestPermissions(MapDriverBookingActivity.this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
+                                ActivityCompat.requestPermissions(MapDriverBookingActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
                             }
                         })
                         .create()
                         .show();
-            }
-            else {
-                ActivityCompat.requestPermissions(MapDriverBookingActivity.this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
+            } else {
+                ActivityCompat.requestPermissions(MapDriverBookingActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
             }
         }
     }
@@ -437,8 +454,7 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
             if (mAuthProvider.existSession()) {
                 mGeofireProvider.removeLocation(mAuthProvider.getId());
             }
-        }
-        else {
+        } else {
             Toast.makeText(this, "No te puedes desconectar", Toast.LENGTH_SHORT).show();
         }
     }
@@ -446,9 +462,20 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
     //ESTA
     private void updateLocation() {
         if (mAuthProvider.existSession() && mCurrentLatLng != null) {
-            Toast.makeText(this, "No te puedes desconectar"+mAuthProvider.getId(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No te puedes desconectar" + mAuthProvider.getId(), Toast.LENGTH_SHORT).show();
             mGeofireProvider.saveLocation(mAuthProvider.getId(), mCurrentLatLng);
+            if (!mIsCloseToClient) {
+                if (mOriginLatLng != null && mCurrentLatLng != null) {
+                    double distance = getDistanceBetween(mOriginLatLng, mCurrentLatLng);//METROS
+                    if (distance <= 200) {
+                        mButtonStartBooking.setEnabled(true);
+                        mIsCloseToClient = true;
+                        Toast.makeText(this, "Esta cerca a la posicion de recogida", Toast.LENGTH_SHORT).show();
+
+                    }
+
+                }
+            }
         }
     }
-
 }
