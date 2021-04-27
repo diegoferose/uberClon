@@ -27,14 +27,20 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.uberclone.Models.ClientBooking;
+import com.example.uberclone.Models.FCMBody;
+import com.example.uberclone.Models.FCMResponse;
+import com.example.uberclone.Models.Token;
 import com.example.uberclone.R;
 import com.example.uberclone.activities.MainActivity;
 import com.example.uberclone.activities.client.DetailRequestActivity;
+import com.example.uberclone.activities.client.RequestDriverActivity;
 import com.example.uberclone.providers.AuthProvider;
 import com.example.uberclone.providers.ClientBookingProvider;
 import com.example.uberclone.providers.ClientProvider;
 import com.example.uberclone.providers.GeofireProvider;
 import com.example.uberclone.providers.GoogleApiProvider;
+import com.example.uberclone.providers.NotificationProvider;
 import com.example.uberclone.providers.TokenProvider;
 import com.example.uberclone.utils.DecodePoints;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -54,6 +60,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.SquareCap;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -61,7 +68,9 @@ import com.google.firebase.database.ValueEventListener;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -107,6 +116,8 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
     private Button mButtonStartBooking;
     private Button mButtonFinishBooking;
 
+    private TokenProvider mTokenProvider;
+    private NotificationProvider mNotificationProvider;
 
     LocationCallback mLocationCallback = new LocationCallback() {
         @Override
@@ -144,6 +155,7 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
     };
 
 
+
     //ESTA
 
     @Override
@@ -157,6 +169,7 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
         mTokenprovider = new TokenProvider();
         mClientProvider = new ClientProvider();
         mClientBookingProvider = new ClientBookingProvider();
+        mNotificationProvider = new NotificationProvider();
 
         mFusedLocation = LocationServices.getFusedLocationProviderClient(this);
 
@@ -204,6 +217,11 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
 
     private void finishBooking() {
         mClientBookingProvider.updateStatus(mExtraClientId, "finish");
+        sendNotification("Viaje Finalizado");
+        if (mFusedLocation != null){
+            mFusedLocation.removeLocationUpdates(mLocationCallback);
+        }
+        mGeofireProvider.removeLocation(mAuthProvider.getId());
         Intent intent = new Intent(MapDriverBookingActivity.this, CalificationClientActivity.class);
         startActivity(intent);
         finish();
@@ -216,6 +234,7 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
         mMap.clear();
         mMap.addMarker(new MarkerOptions().position(mDestinationLatLng).title("Destino").icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_ubicacion)));
         drawRoute(mDestinationLatLng);
+        sendNotification("Viaje Iniciado");
     }
 
     private double getDistanceBetween(LatLng clientLatLng, LatLng driverLatLng) {
@@ -483,5 +502,50 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
                 }
             }
         }
+    }
+
+    private void sendNotification(final String status) {
+        mTokenProvider.getToken(mExtraClientId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String token = dataSnapshot.child("token").getValue().toString();
+                    Map<String, String> map = new HashMap<>();
+                    map.put("title", "ESTADO DE TU VIAJE");
+                    map.put("body",
+                            " Tu estado del viaje es : " + status
+                    );
+                    map.put("idClient", mAuthProvider.getId());
+                    FCMBody fcmBody = new FCMBody(token, "high", "4500s", map);
+                    mNotificationProvider.sendNotification(fcmBody).enqueue(new Callback<FCMResponse>() {
+                        @Override
+                        public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
+                            if (response.body() != null) {
+                                if (response.body().getSuccess() != 1) {
+                                    Toast.makeText(MapDriverBookingActivity.this, "No se pudo enviar la notificacion", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            else {
+                                Toast.makeText(MapDriverBookingActivity.this, "No se pudo enviar la notificacion", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<FCMResponse> call, Throwable t) {
+                            Log.d("Error", "Error " + t.getMessage());
+                        }
+                    });
+                }
+                else {
+                    Toast.makeText(MapDriverBookingActivity.this, "No se pudo enviar la notificacion porque el conductor no tiene un token de sesion", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
 }
