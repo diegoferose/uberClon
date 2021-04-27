@@ -12,6 +12,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.UberClone">
+        <activity android:name=".activities.client.CalificationDriverActivity"></activity>
+        <activity android:name=".activities.driver.CalificationClientActivity" />
+        <activity android:name=".activities.driver.MapDriverBookingActivity" />
+        <activity android:name=".activities.client.MapClientBookingActivity" />
+
         <receiver
             android:name=".receivers.AcceptReceiver"
             android:enabled="true" />
@@ -21,11 +26,11 @@
 
         <service android:name=".services.MyFirebaseMessagingClient">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-        <activity android:name=".activities.client.RequestDriverActivity"></activity>
+        <activity android:name=".activities.client.RequestDriverActivity" />
         <activity
             android:name=".activities.client.DetailRequestActivity"
             android:parentActivityName=".activities.client.MapClientActivity" />
