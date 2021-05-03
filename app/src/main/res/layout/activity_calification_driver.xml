@@ -7,9 +7,88 @@
     android:fitsSystemWindows="true"
     tools:context=".activities.client.CalificationDriverActivity">
 
+    <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="CALIFICAR CONDUCTOR"/>
+        android:text="VIAJE FINALIZO"
+        android:textAlignment="center"
+        android:textSize="22sp"
+        android:textColor="@android:color/black"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="30dp"/>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    <com.airbnb.lottie.LottieAnimationView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:lottie_imageAssetsFolder="assets"
+        app:lottie_fileName="782-check-mark-success.json"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Desde"
+        android:textAlignment="center"
+        android:textSize="22sp"
+        android:textColor="@android:color/black"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="20dp"/>
+    <TextView
+        android:id="@+id/textViewOriginCalification"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cr falsa con avenida falsa"
+        android:textAlignment="center"
+        android:textSize="17sp"
+        android:textColor="@android:color/black"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="5dp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Hasta"
+        android:textAlignment="center"
+        android:textSize="22sp"
+        android:textColor="@android:color/black"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="20dp"/>
+    <TextView
+        android:id="@+id/textViewDestinationCalification"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cr falsa con avenida falsa"
+        android:textAlignment="center"
+        android:textSize="17sp"
+        android:textColor="@android:color/black"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="5dp"/>
+
+    <RatingBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"/>
+
+    </LinearLayout>
+
+        <Button
+        android:id="@+id/btnCalificationClient"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:text="CALIFICAR CLIENTE"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/purple_700"
+        android:layout_margin="20dp"
+            />
+
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
