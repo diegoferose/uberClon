@@ -481,14 +481,14 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
                 mGeofireProvider.removeLocation(mAuthProvider.getId());
             }
         } else {
-            Toast.makeText(this, "No te puedes desconectar", Toast.LENGTH_SHORT).show();
+           // Toast.makeText(this, "No te puedes desconectar", Toast.LENGTH_SHORT).show();
         }
     }
 
     //ESTA
     private void updateLocation() {
         if (mAuthProvider.existSession() && mCurrentLatLng != null) {
-            Toast.makeText(this, "No te puedes desconectar" + mAuthProvider.getId(), Toast.LENGTH_SHORT).show();
+           // Toast.makeText(this, "No te puedes desconectar" + mAuthProvider.getId(), Toast.LENGTH_SHORT).show();
             mGeofireProvider.saveLocation(mAuthProvider.getId(), mCurrentLatLng);
             if (!mIsCloseToClient) {
                 if (mOriginLatLng != null && mCurrentLatLng != null) {
