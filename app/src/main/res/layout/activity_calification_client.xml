@@ -28,7 +28,7 @@
             app:lottie_imageAssetsFolder="assets"
             app:lottie_fileName="782-check-mark-success.json"
             app:lottie_autoPlay="true"
-            app:lottie_loop="true"
+            app:lottie_loop="false"
             android:layout_gravity="center"
             android:layout_marginTop="30dp" />
 
@@ -72,6 +72,7 @@
             android:layout_marginTop="5dp"/>
 
         <RatingBar
+            android:id="@+id/ratingbarCalification"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -80,11 +81,11 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/btnCalificationDriver"
+        android:id="@+id/btnCalification"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:text="CALIFICAR CONDUCTOR"
+        android:text="CALIFICAR CLIENTE"
         android:backgroundTint="@color/purple_700"
         android:textColor="@color/white"
         android:layout_margin="20dp"

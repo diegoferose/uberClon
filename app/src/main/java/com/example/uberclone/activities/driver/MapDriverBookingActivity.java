@@ -216,12 +216,14 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
 
     private void finishBooking() {
         mClientBookingProvider.updateStatus(mExtraClientId, "finish");
+        mClientBookingProvider.updateIdHistoryBooking(mExtraClientId);
         sendNotification("Viaje Finalizado");
         if (mFusedLocation != null){
             mFusedLocation.removeLocationUpdates(mLocationCallback);
         }
         mGeofireProvider.removeLocation(mAuthProvider.getId());
         Intent intent = new Intent(MapDriverBookingActivity.this, CalificationClientActivity.class);
+        intent.putExtra("idClient",mExtraClientId);
         startActivity(intent);
         finish();
     }
