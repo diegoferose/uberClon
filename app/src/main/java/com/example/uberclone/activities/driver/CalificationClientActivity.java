@@ -14,6 +14,8 @@ import android.widget.Toast;
 import com.example.uberclone.Models.ClientBooking;
 import com.example.uberclone.Models.HistoryBooking;
 import com.example.uberclone.R;
+import com.example.uberclone.activities.client.CalificationDriverActivity;
+import com.example.uberclone.activities.client.MapClientActivity;
 import com.example.uberclone.providers.ClientBookingProvider;
 import com.example.uberclone.providers.HistoryBookingProvider;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -114,7 +116,15 @@ public class CalificationClientActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists()){
-                        mHistoryBookingProvider.updateCalificationClient(mHistoryBooking.getIdHistoryBooking(),mcalification);
+                        mHistoryBookingProvider.updateCalificationClient(mHistoryBooking.getIdHistoryBooking(),mcalification).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Toast.makeText(CalificationClientActivity.this,"La calificacion se guardo correctamente", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(CalificationClientActivity.this, MapDriverActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                        });
                     }
 
                     else {
