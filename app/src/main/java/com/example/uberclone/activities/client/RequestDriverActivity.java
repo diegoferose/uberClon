@@ -210,7 +210,8 @@ public class RequestDriverActivity extends AppCompatActivity {
                                 if (response.body().getSuccess() == 1) {
                                     ClientBooking clientBooking = new ClientBooking(
                                             mAuthProvider.getId(),
-                                            mIdDriverFound,
+                                            /*mIdDriverFound,*/
+                                            "",
                                             mExtraDestination,
                                             mExtraOrigin,
                                             time,

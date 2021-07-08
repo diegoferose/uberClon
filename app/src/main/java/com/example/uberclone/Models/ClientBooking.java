@@ -14,6 +14,9 @@ public class ClientBooking {
     double originLng;
     double destinationLat;
     double destinationLng;
+    String idVan;
+    String fechaViaje;
+    String horaViaje;
 
     public ClientBooking(){
 
