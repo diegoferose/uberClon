@@ -58,6 +58,8 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
     private TextView mTextViewDestination;
     private TextView mTextViewTime;
     private TextView mTextViewDistance;
+    private TextView mTextViewFecha;
+    private TextView mTextViewHora;
 
     // Boton de solicitar viaje
     private Button mButtonRequest;
@@ -90,11 +92,14 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
         mTextViewDestination = findViewById(R.id.textViewDestination);
         mTextViewDistance = findViewById(R.id.textViewDistance);
         mTextViewTime = findViewById(R.id.textViewTime);
+        mTextViewFecha = findViewById(R.id.textViewFecha);
+        mTextViewHora = findViewById(R.id.textViewHora);
 
         //Ingresamos valores a las variables
         mTextViewOrigin.setText(mExtraOrigin);
         mTextViewDestination.setText(mExtraDestination);
-
+        mTextViewFecha.setText(getIntent().getStringExtra("fecha"));
+        mTextViewHora.setText(getIntent().getStringExtra("hora"));
         //Instacionamos boton del Request de solicitar viaje
         mButtonRequest = findViewById(R.id.btnRequestNow);
 

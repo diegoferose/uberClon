@@ -94,8 +94,8 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
 
     //Trazar ruta
     private TextView mTextViewClientBooking;
-    private TextView mTextViewEmailClientBooking;
     private TextView mTextViewOriginClientBooking;
+    private TextView mTextViewEmailClientBooking;
     private TextView mTextViewDestinationClientBooking;
     private TextView mTextViewStatusBooking;
 

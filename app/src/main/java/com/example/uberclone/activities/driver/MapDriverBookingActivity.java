@@ -1,12 +1,5 @@
 package com.example.uberclone.activities.driver;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,20 +13,21 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.uberclone.Models.ClientBooking;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.example.uberclone.Models.FCMBody;
 import com.example.uberclone.Models.FCMResponse;
 import com.example.uberclone.R;
-import com.example.uberclone.activities.MainActivity;
-import com.example.uberclone.activities.client.DetailRequestActivity;
-import com.example.uberclone.activities.client.RequestDriverActivity;
 import com.example.uberclone.providers.AuthProvider;
 import com.example.uberclone.providers.ClientBookingProvider;
 import com.example.uberclone.providers.ClientProvider;
@@ -59,7 +53,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.SquareCap;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;

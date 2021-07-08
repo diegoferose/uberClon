@@ -8,6 +8,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,6 +27,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.uberclone.Models.Token;
@@ -64,9 +69,19 @@ import com.google.maps.android.SphericalUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class MapClientActivity extends AppCompatActivity implements OnMapReadyCallback {
+    private Button botonFecha;
+    private Button botonHora;
+    private String fechaViaje;
+    private String horaViaje;
+    Calendar calendar;
+    DatePickerDialog datePickerDialog;
+    TimePickerDialog timePickerDialog;
+
     private GoogleMap mMap;
     private SupportMapFragment mMapFragment;
     private AuthProvider mAuthProvider;
@@ -147,6 +162,43 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
                 requestDriver();
             }
         });
+        botonFecha = findViewById(R.id.botonFecha);
+        botonFecha.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                calendar = Calendar.getInstance();
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+                int month = calendar.get(Calendar.MONTH);
+                int year = calendar.get(Calendar.YEAR);
+
+
+                datePickerDialog = new DatePickerDialog(MapClientActivity.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int myear, int mmonth, int mdayOfMonth) {
+                        botonFecha.setText("Fecha: "+mdayOfMonth+"/"+(mmonth+1)+"/"+myear);
+                        fechaViaje = mdayOfMonth+"/"+(mmonth+1)+"/"+myear;
+                    }
+                },day,month,year);
+                datePickerDialog.show();
+            }
+        });
+        botonHora = findViewById(R.id.botonHora);
+        botonHora.setOnClickListener(new  View.OnClickListener() {
+            @Override
+            public void onClick (View view){
+                calendar = Calendar.getInstance();
+                int hour = calendar.get(Calendar.HOUR_OF_DAY);
+                int minute = calendar.get(Calendar.MINUTE);
+                timePickerDialog = new TimePickerDialog(MapClientActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int mhourOfDay, int mminute) {
+                        botonHora.setText("Hora: "+mhourOfDay+"."+mminute);
+                        horaViaje = mhourOfDay+"."+mminute;
+                    }
+                },hour,minute,false);
+                timePickerDialog.show();
+            }
+        });
 
         //Instanciamos varables Place Autocomplete
         if (!Places.isInitialized()) {
@@ -161,16 +213,22 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
     }
     private void requestDriver() {
 
-        if (mOriginLatLng != null && mDestinationLatLng != null) {
-            Intent intent = new Intent(MapClientActivity.this, DetailRequestActivity.class);
-            intent.putExtra("origin_lat", mOriginLatLng.latitude);
-            intent.putExtra("origin_lng", mOriginLatLng.longitude);
-            intent.putExtra("destination_lat", mDestinationLatLng.latitude);
-            intent.putExtra("destination_lng", mDestinationLatLng.longitude);
-            intent.putExtra("origin" , mOrigin);
-            intent.putExtra("destination" , mDestination);
+        if (mOriginLatLng != null && mDestinationLatLng != null ) {
+            if (fechaViaje != null && horaViaje != null){
+                Intent intent = new Intent(MapClientActivity.this, DetailRequestActivity.class);
+                intent.putExtra("origin_lat", mOriginLatLng.latitude);
+                intent.putExtra("origin_lng", mOriginLatLng.longitude);
+                intent.putExtra("destination_lat", mDestinationLatLng.latitude);
+                intent.putExtra("destination_lng", mDestinationLatLng.longitude);
+                intent.putExtra("origin" , mOrigin);
+                intent.putExtra("destination" , mDestination);
+                intent.putExtra("fecha", fechaViaje);
+                intent.putExtra("hora", horaViaje);
+                startActivity(intent);
+            }else{
+                Toast.makeText(this, "Debe seleccionar fecha y hora para el viaje", Toast.LENGTH_SHORT).show();
+            }
 
-            startActivity(intent);
         }
         else {
             Toast.makeText(this, "Debe seleccionar el lugar de origen y el destino", Toast.LENGTH_SHORT).show();
