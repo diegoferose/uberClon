@@ -7,107 +7,128 @@
     android:fitsSystemWindows="true"
     tools:context=".activities.driver.NotificationBookingActivity">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <ImageView
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:src="@drawable/icon_map"
-            android:layout_gravity="center" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Desde"
-            android:textAlignment="center"
-            android:textSize="22sp"
-            android:textColor="@android:color/black"
-            android:gravity="center_horizontal"
-            android:layout_marginTop="20dp"/>
-        <TextView
-            android:id="@+id/textViewOrigin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Cr falsa con avenida falsa"
-            android:textAlignment="center"
-            android:textSize="17sp"
-            android:textColor="@android:color/black"
-            android:gravity="center_horizontal"
-            android:layout_marginTop="5dp"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Hasta"
-            android:textAlignment="center"
-            android:textSize="22sp"
-            android:textColor="@android:color/black"
-            android:gravity="center_horizontal"
-            android:layout_marginTop="20dp"/>
-        <TextView
-            android:id="@+id/textViewDestination"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Cr falsa con avenida falsa"
-            android:textAlignment="center"
-            android:textSize="17sp"
-            android:textColor="@android:color/black"
-            android:gravity="center_horizontal"
-            android:layout_marginTop="5dp"/>
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="20dp">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:src="@drawable/icon_map"
+                android:layout_gravity="center" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Desde"
+                android:textAlignment="center"
+                android:textSize="22sp"
+                android:textColor="@android:color/black"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="20dp"/>
+            <TextView
+                android:id="@+id/textViewOrigin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Cr falsa con avenida falsa"
+                android:textAlignment="center"
+                android:textSize="17sp"
+                android:textColor="@android:color/black"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="5dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Hasta"
+                android:textAlignment="center"
+                android:textSize="22sp"
+                android:textColor="@android:color/black"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="20dp"/>
+            <TextView
+                android:id="@+id/textViewDestination"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Cr falsa con avenida falsa"
+                android:textAlignment="center"
+                android:textSize="17sp"
+                android:textColor="@android:color/black"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="5dp"/>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Tiempo de llegada"
-                    android:textSize="18sp"
-                    android:textColor="@color/black"/>
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
 
-                <TextView
-                    android:id="@+id/textViewMin"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tiempo de llegada"
+                        android:textSize="18sp"
+                        android:textColor="@color/black"/>
+
+                    <TextView
+                        android:id="@+id/textViewMin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0 Minutos" />
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="0 Minutos" />
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Distancia"
+                        android:textSize="18sp"
+                        android:textColor="@color/black"/>
+
+                    <TextView
+                        android:id="@+id/textViewDistance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0 km" />
+
+                </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/textViewCounter"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:text="10"
+                android:textAlignment="center"
+                android:textSize="40sp"
+                android:layout_marginTop="25dp"
+                android:gravity="center_horizontal" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Distancia"
-                    android:textSize="18sp"
-                    android:textColor="@color/black"/>
 
-                <TextView
-                    android:id="@+id/textViewDistance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0 km" />
 
-            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+
+    </ScrollView>
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
