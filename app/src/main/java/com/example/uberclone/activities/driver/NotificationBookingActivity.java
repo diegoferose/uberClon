@@ -1,5 +1,6 @@
 package com.example.uberclone.activities.driver;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.NotificationManager;
@@ -12,11 +13,15 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.uberclone.R;
 import com.example.uberclone.providers.AuthProvider;
 import com.example.uberclone.providers.ClientBookingProvider;
 import com.example.uberclone.providers.GeofireProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 public class NotificationBookingActivity extends AppCompatActivity {
 
@@ -39,22 +44,23 @@ public class NotificationBookingActivity extends AppCompatActivity {
 
     private MediaPlayer mMediaplayer;
 
-    private int mCounter = 10;
+    private int mCounter=10;
     private Handler mHandler;
     Runnable runnable = new Runnable() {
         @Override
         public void run() {
             mCounter = mCounter -1;
             mTextViewCounter.setText(String.valueOf(mCounter));
-            if (mCounter > 0) {
+           if (mCounter > 0) {
                 initTimer();
             }
             else {
                 cancelBooking();
-            }
+           }
 
         }
     };
+    private ValueEventListener mListener;
 
     private void initTimer(){
         mHandler = new Handler();
@@ -88,6 +94,8 @@ public class NotificationBookingActivity extends AppCompatActivity {
         mMediaplayer = MediaPlayer.create(this, R.raw.ringtone);
         mMediaplayer.setLooping(true);
 
+        mClientBookingProvider =  new ClientBookingProvider();
+
         getWindow().addFlags(
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
                 WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
@@ -96,6 +104,8 @@ public class NotificationBookingActivity extends AppCompatActivity {
         );
 
         initTimer();
+
+        checkIfClientCancelBooking();
 
         mbuttonAccept.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,6 +120,27 @@ public class NotificationBookingActivity extends AppCompatActivity {
                 cancelBooking();
             }
         });
+    }
+
+    private void checkIfClientCancelBooking(){
+       mListener =  mClientBookingProvider.getClientBooking(mExtraIdClient).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!snapshot.exists()){
+                    Toast.makeText(NotificationBookingActivity.this, "El cliente cancelo viaje", Toast.LENGTH_LONG).show();
+                    if (mHandler != null) mHandler.removeCallbacks(runnable);
+                    Intent intent = new Intent(NotificationBookingActivity.this,MapDriverActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 
     private void cancelBooking() {
@@ -182,6 +213,9 @@ public class NotificationBookingActivity extends AppCompatActivity {
             if (mMediaplayer.isPlaying()){
                 mMediaplayer.pause();
             }
+        }
+        if (mListener != null){
+            mClientBookingProvider.getClientBooking(mExtraIdClient).removeEventListener(mListener);
         }
     }
 }
